@@ -11,16 +11,48 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
+class MyDB(object):
+    """Handles connecting to a DB, executing a query, and closing the connection gracefully.
+    """
+    _db_connection = None
+    _db_cur = None
+
+    def __init__(self):
+        self._db_connection = connect()
+        self._db_cur = self._db_connection.cursor()
+
+    def query(self, query, params=None):
+        return self._db_cur.execute(query, params)
+
+    def commit(self):
+        self._db_connection.commit()
+
+    def __del__(self):
+        self._db_connection.close()
+
+
 def deleteMatches():
     """Remove all the match records from the database."""
+    db = MyDB()
+    db.query("DELETE FROM matches;")
+    db.commit()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    db = MyDB()
+    db.query("DELETE FROM players;")
+    db.commit()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    db = MyDB()
+    db.query("SELECT COUNT(*) from players;")
+
+    row = db._db_cur.fetchone()
+
+    return row[0]
 
 
 def registerPlayer(name):
@@ -32,6 +64,10 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    db = MyDB()
+    db.query("INSERT INTO players (name) VALUES ('huey');")
+    db.commit()
+
 
 
 def playerStandings():
