@@ -6,12 +6,23 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
-DROP TABLE IF EXISTS players;
-DROP TABLE IF EXISTS matches;
-
 DROP VIEW IF EXISTS wins_matches;
 DROP VIEW IF EXISTS losses;
 DROP VIEW IF EXISTS wins;
+
+DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS matches;
+
+CREATE TABLE players (
+  id serial primary key,
+  name text
+);
+
+CREATE TABLE matches (
+  winner integer REFERENCES players(id),
+  loser integer REFERENCES players(id),
+  primary key (winner, loser)
+);
 
 CREATE VIEW wins AS
   SELECT id, COUNT(winner) AS wins
@@ -30,12 +41,3 @@ CREATE VIEW wins_matches AS
   FROM wins, losses
   WHERE wins.id = losses.id;
 
-CREATE TABLE players (
-  id serial,
-  name text
-);
-
-CREATE TABLE matches (
-  winner integer,
-  loser integer
-);
