@@ -14,14 +14,14 @@ DROP TABLE IF EXISTS players;
 DROP TABLE IF EXISTS matches;
 
 CREATE TABLE players (
-  id serial primary key,
-  name text
+  id SERIAL PRIMARY KEY,
+  name TEXT
 );
 
 CREATE TABLE matches (
-  winner integer REFERENCES players(id),
-  loser integer REFERENCES players(id),
-  primary key (winner, loser)
+  winner INTEGER REFERENCES players(id),
+  loser INTEGER REFERENCES players(id),
+  PRIMARY KEY (winner, loser)
 );
 
 CREATE VIEW wins AS
