@@ -86,7 +86,7 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     db = MyDB()
-    db.query("select players.id, name, wins, matches from players, wins_matches where players.id = wins_matches.id;")
+    db.query("select players.id, name, wins, matches from players, wins_matches where players.id = wins_matches.id order by wins desc;")
     return db.cursor().fetchall()
 
 
@@ -113,7 +113,19 @@ def swissPairings():
     Returns:
       A list of tuples, each of which contains (id1, name1, id2, name2)
         id1: the first player's unique id
-        name1: the first player's name
+        name1: the first player' name
         id2: the second player's unique id
         name2: the second player's name
     """
+    standings = playerStandings()
+    n = len(standings)
+
+    pairings = list()
+
+    for i in range(0, n, 2):
+        first = standings[i]
+        second = standings[i + 1]
+
+        pairings.append((first[0], first[1], second[0], second[1]))
+
+    return pairings

@@ -41,3 +41,8 @@ CREATE VIEW wins_matches AS
   FROM wins, losses
   WHERE wins.id = losses.id;
 
+CREATE VIEW standings AS
+  SELECT players.id, name, wins, matches
+  FROM players, wins_matches
+  WHERE players.id = wins_matches.id
+  ORDER BY wins DESC;
