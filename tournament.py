@@ -24,6 +24,9 @@ class MyDB(object):
     def query(self, query, params=None):
         return self._db_cur.execute(query, params)
 
+    def cursor(self):
+        return self._db_cur
+
     def commit(self):
         self._db_connection.commit()
 
@@ -65,9 +68,8 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     db = MyDB()
-    db.query("INSERT INTO players (name) VALUES ('huey');")
+    db.query("INSERT INTO players (name) VALUES (%s);", (name,))
     db.commit()
-
 
 
 def playerStandings():
@@ -83,6 +85,9 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    db = MyDB()
+    db.query("select players.id, name, wins, matches from players, wins_matches where players.id = wins_matches.id;")
+    return db.cursor().fetchall()
 
 
 def reportMatch(winner, loser):
