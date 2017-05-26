@@ -98,7 +98,7 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     db = MyDB()
-    db.query("insert into matches values (%s, %s);", (winner, loser))
+    db.query("insert into matches (winner, loser) values (%s, %s);", (winner, loser))
     db.commit()
 
 
